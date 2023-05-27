@@ -27,4 +27,8 @@ app.use((req, res, next) => {
 app.use('/users', routerUser);
 app.use('/cards', routerCard);
 
+app.use((req, res) => {
+  res.status(ERROR_NOT_FOUND).send({ message: 'Страницы по запрошенному URL не существует' });
+});
+
 app.listen(PORT, () => console.log('server started'));
