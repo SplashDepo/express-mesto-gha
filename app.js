@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import routerUser from './routes/users.js';
 import routerCard from './routes/cards.js';
+import { ERROR_NOT_FOUND } from './errors/errors.js';
 
 const { PORT = 3000 } = process.env;
 const URL = 'mongodb://127.0.0.1:27017/mestodb';
