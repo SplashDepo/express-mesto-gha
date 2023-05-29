@@ -1,19 +1,18 @@
-import User from "../models/user.js";
+import User from '../models/user.js';
 import {
   ERROR_INACCURATE_DATA,
   ERROR_NOT_FOUND,
   ERROR_INTERNAL_SERVER,
   INTERNAL_SERVER_MESSAGE,
-  MISSING_USER_ID_MESSAGE
-} from '../errors/errors.js'
+  MISSING_USER_ID_MESSAGE,
+} from '../errors/errors.js';
 
 const getAllUsers = (req, res) => {
   User.find({})
     .then((user) => res.send({ data: user }))
-    .catch(() =>
-      res
-        .status(ERROR_INTERNAL_SERVER)
-        .send({ message: INTERNAL_SERVER_MESSAGE }));
+    .catch(() => res
+      .status(ERROR_INTERNAL_SERVER)
+      .send({ message: INTERNAL_SERVER_MESSAGE }));
 };
 
 const getUserById = (req, res) => {
@@ -21,31 +20,29 @@ const getUserById = (req, res) => {
 
   User.findById(id)
     .then((user) => {
-      if (user) return res.send({ data: user });
+      if (user) return res.status(201).send({ data: user });
       return res.status(ERROR_NOT_FOUND).send({ message: MISSING_USER_ID_MESSAGE });
     })
-    .catch((err) =>
-      err.name === 'CastError'
-        ? res
-          .status(ERROR_INACCURATE_DATA)
-          .send({ message: 'Передан некорректный id' })
-        : res
-          .status(ERROR_INTERNAL_SERVER)
-          .send({ message: INTERNAL_SERVER_MESSAGE }));
+    .catch((err) => (err.name === 'CastError'
+      ? res
+        .status(ERROR_INACCURATE_DATA)
+        .send({ message: 'Передан некорректный id' })
+      : res
+        .status(ERROR_INTERNAL_SERVER)
+        .send({ message: INTERNAL_SERVER_MESSAGE })));
 };
 
 const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
-    .catch((err) =>
-      err.name === 'ValidationError'
-        ? res
-          .status(ERROR_INACCURATE_DATA)
-          .send({ message: 'Переданы некорректные данные при создании пользователя' })
-        : res
-          .status(ERROR_INTERNAL_SERVER)
-          .send({ message: INTERNAL_SERVER_MESSAGE }));
+    .catch((err) => (err.name === 'ValidationError'
+      ? res
+        .status(ERROR_INACCURATE_DATA)
+        .send({ message: 'Переданы некорректные данные при создании пользователя' })
+      : res
+        .status(ERROR_INTERNAL_SERVER)
+        .send({ message: INTERNAL_SERVER_MESSAGE })));
 };
 
 const updateUserInfo = (req, res) => {
@@ -55,7 +52,8 @@ const updateUserInfo = (req, res) => {
     .findByIdAndUpdate(
       userId,
       { name, about },
-      { new: true, runValidators: true, upsert: false })
+      { new: true, runValidators: true, upsert: false },
+    )
     .then((user) => {
       if (user) return res.send({ data: user });
       return res.status(ERROR_NOT_FOUND).send({ message: MISSING_USER_ID_MESSAGE });
@@ -70,7 +68,6 @@ const updateUserInfo = (req, res) => {
       }
 
       return res.status(ERROR_INTERNAL_SERVER).send({ message: INTERNAL_SERVER_MESSAGE });
-
     });
 };
 
@@ -81,7 +78,8 @@ const updateUserAvatar = (req, res) => {
     .findByIdAndUpdate(
       userId,
       { avatar },
-      { new: true, runValidators: true, upsert: false })
+      { new: true, runValidators: true, upsert: false },
+    )
     .then((user) => {
       if (user) return res.send({ data: user });
       return res.status(ERROR_NOT_FOUND).send({ message: MISSING_USER_ID_MESSAGE });
@@ -96,8 +94,9 @@ const updateUserAvatar = (req, res) => {
       }
 
       return res.status(ERROR_INTERNAL_SERVER).send({ message: INTERNAL_SERVER_MESSAGE });
-
     });
 };
 
-export { getAllUsers, getUserById, createUser, updateUserInfo, updateUserAvatar };
+export {
+  getAllUsers, getUserById, createUser, updateUserInfo, updateUserAvatar,
+};
