@@ -20,7 +20,7 @@ const getUserById = (req, res) => {
 
   User.findById(id)
     .then((user) => {
-      if (user) return res.status(201).send({ data: user });
+      if (user) return res.send({ data: user });
       return res.status(ERROR_NOT_FOUND).send({ message: MISSING_USER_ID_MESSAGE });
     })
     .catch((err) => (err.name === 'CastError'
@@ -35,7 +35,7 @@ const getUserById = (req, res) => {
 const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.status(201).send({ data: user }))
     .catch((err) => (err.name === 'ValidationError'
       ? res
         .status(ERROR_INACCURATE_DATA)
