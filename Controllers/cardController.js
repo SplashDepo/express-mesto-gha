@@ -2,6 +2,7 @@ import Card from '../models/card.js';
 
 import NotFoundError from '../errors/NotFoundError.js';
 import InaccurateDataError from '../errors/InaccurateDataError.js';
+import ForbiddenError from '../errors/ForbiddenError.js';
 
 const getAllCards = (req, res) => {
   Card.find({})
@@ -27,13 +28,16 @@ const createCard = (req, res, next) => {
 const deleteCard = (req, res, next) => {
   const { id: cardId } = req.params;
   const { userId } = req.user;
-  Card.findOneAndRemove({
-    _id: cardId,
-    owner: userId,
-  })
-    .then((user) => {
-      if (user) return res.send({ data: user });
-      throw new NotFoundError('Данные по указанному id не найдены');
+  Card.findById({ _id: cardId })
+    .then((card) => {
+      if (!card) throw new NotFoundError('Данные по указанному id не найдены');
+      const { owner: cardOwnerId } = card;
+      if (cardOwnerId.valueOf() !== userId) throw new ForbiddenError('Нет прав доступа');
+
+      card
+        .remove()
+        .then(() => res.send({ data: card }))
+        .catch(next);
     })
     .catch(next);
 };
