@@ -36,7 +36,7 @@ const deleteCard = (req, res, next) => {
 
       card
         .remove()
-        .then(() => res.send({ data: card }))
+        .then(() => res.status(200).send({ data: card }))
         .catch(next);
     })
     .catch(next);
