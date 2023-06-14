@@ -18,8 +18,10 @@ const getUserById = (req, res, next) => {
 
   User.findById(id)
     .then((user) => {
-      if (user) return res.status(200).send({ data: user });
-      throw new NotFoundError('Пользователь с таким id не найден');
+      if (!user) {
+        throw new NotFoundError('Пользователь с таким id не найден');
+      }
+      return res.status(200).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -35,9 +37,10 @@ const getCurrentUserInfo = (req, res, next) => {
   User
     .findById(userId)
     .then((user) => {
-      if (user) return res.status(200).send({ user });
-
-      throw new NotFoundError('Пользователь с таким id не найден');
+      if (!user) {
+        throw new NotFoundError('Пользователь с таким id не найден');
+      }
+      return res.status(200).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -109,8 +112,10 @@ const updateUserInfo = (req, res, next) => {
       { new: true, runValidators: true, upsert: false },
     )
     .then((user) => {
-      if (user) return res.send({ data: user });
-      throw new NotFoundError('Пользователь с таким id не найден');
+      if (!user) {
+        throw new NotFoundError('Пользователь с таким id не найден');
+      }
+      return res.status(200).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -131,8 +136,10 @@ const updateUserAvatar = (req, res, next) => {
       { new: true, runValidators: true, upsert: false },
     )
     .then((user) => {
-      if (user) return res.send({ data: user });
-      throw new NotFoundError('Пользователь с таким id не найден');
+      if (!user) {
+        throw new NotFoundError('Пользователь с таким id не найден');
+      }
+      return res.status(200).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {

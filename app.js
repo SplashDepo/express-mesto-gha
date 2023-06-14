@@ -5,7 +5,8 @@ import helmet from 'helmet';
 import { errors } from 'celebrate';
 import routerUser from './routes/users.js';
 import routerCard from './routes/cards.js';
-import { loginUser, createUser } from './Controllers/userController.js';
+import routerSignin from './routes/signin.js';
+import routerSignup from './routes/signup.js';
 import NotFoundError from './errors/NotFoundError.js';
 import errorHandler from './middlewares/errorHandler.js';
 import auth from './middlewares/auth.js';
@@ -22,8 +23,8 @@ app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.post('/signup', createUser);
-app.post('/signin', loginUser);
+app.use('/signup', routerSignin);
+app.use('/signin', routerSignup);
 
 app.use(auth);
 

@@ -16,3 +16,5 @@ router.post('/signup', celebrate({
       .pattern(URL_REGEX),
   }),
 }), createUser);
+
+export default router;
