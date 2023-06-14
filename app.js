@@ -6,6 +6,7 @@ import routerUser from './routes/users.js';
 import routerCard from './routes/cards.js';
 import { loginUser, createUser } from './Controllers/userController.js';
 import NotFoundError from './errors/NotFoundError.js';
+import { errors } from 'celebrate';
 import errorHandler from './middlewares/errorHandler.js';
 import auth from './middlewares/auth.js';
 
@@ -30,6 +31,8 @@ app.use('/users', routerUser);
 app.use('/cards', routerCard);
 
 app.use((req, res, next) => next(new NotFoundError('Страницы по запрошенному URL не существует')));
+
+app.use(errors());
 app.use(errorHandler);
 
 app.listen(PORT);
