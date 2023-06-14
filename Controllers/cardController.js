@@ -15,7 +15,7 @@ const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const { _id: ownerId } = req.user;
   Card.create({ name, link, owner: ownerId })
-    .then((cards) => res.status(201).send({ data: cards }))
+    .then((cards) => res.status(200).send({ data: cards }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new InaccurateDataError('Переданы некорректные данные при создании карточки'));
@@ -51,7 +51,7 @@ const likeCard = (req, res, next) => {
     { new: true },
   )
     .then((user) => {
-      if (user) return res.send({ data: user });
+      if (user) return res.status(200).send({ data: user });
       throw new NotFoundError('Карточка с указанным id не найдена');
     })
     .catch((err) => {

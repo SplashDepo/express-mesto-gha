@@ -36,7 +36,7 @@ const getCurrentUserInfo = (req, res, next) => {
   User
     .findById(userId)
     .then((user) => {
-      if (user) return res.send({ user });
+      if (user) return res.status(200).send({ user });
 
       throw new NotFoundError('Пользователь с таким id не найден');
     })
