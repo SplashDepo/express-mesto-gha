@@ -8,26 +8,34 @@ const userSchema = new mongoose.Schema({
     unique: true,
     required: true,
     validate: {
-      validator: (v) => validator.isEmail(v),
-      message: 'Введите Email',
+      validator: (email) => /.+@.+\..+/.test(email),
+      message: 'Требуется ввести электронный адрес',
     },
   },
   password: {
     type: String,
     required: true,
     select: false,
+    validate: {
+      validator: ({ length }) => length >= 6,
+      message: 'Пароль должен состоять минимум из 6 символов',
+    },
   },
   name: {
     type: String,
     default: 'Жак-Ив Кусто',
-    minlength: [2, 'Минимальная длина поля "name" - 2'],
-    maxlength: [30, 'Максимальная длина поля "name" - 30'],
+    validate: {
+      validator: ({ length }) => length >= 2 && length <= 30,
+      message: 'Имя пользователя должно быть длиной от 2 до 30 символов',
+    },
   },
   about: {
     type: String,
     default: 'Исследователь',
-    minlength: [2, 'Минимальная длина поля "about" - 2'],
-    maxlength: [30, 'Максимальная длина поля "about" - 30'],
+    validate: {
+      validator: ({ length }) => length >= 2 && length <= 30,
+      message: 'Информация о пользователе должна быть длиной от 2 до 30 символов',
+    },
   },
   avatar: {
     type: String,

@@ -1,21 +1,21 @@
 import mongoose, { Schema } from 'mongoose';
-import validator from 'validator';
+
+import URL_REGEX from '../utils/constant.js';
 
 const cardSchema = new Schema({
   name: {
     type: String,
     required: [true, 'Поле "name" должно быть заполнено'],
-    minlength: [2, 'Минимальная длина поля "name" - 2'],
-    maxlength: [30, 'Максимальная длина поля "name" - 30'],
+    validate: {
+      validator: ({ length }) => length >= 2 && length <= 30,
+      message: 'Имя карточки должно быть длиной от 2 до 30 символов',
+    },
   },
   link: {
     type: String,
-    avatar: {
-      type: String,
-      validate: {
-        validator: (v) => validator.isURL(v),
-        message: 'Некорректный URL',
-      },
+    validate: {
+      validator: (url) => URL_REGEX.test(url),
+      message: 'Требуется ввести URL',
     },
     required: [true, 'Поле "link" должно быть заполнено'],
   },
