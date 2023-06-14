@@ -2,11 +2,11 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import helmet from 'helmet';
+import { errors } from 'celebrate';
 import routerUser from './routes/users.js';
 import routerCard from './routes/cards.js';
 import { loginUser, createUser } from './Controllers/userController.js';
 import NotFoundError from './errors/NotFoundError.js';
-import { errors } from 'celebrate';
 import errorHandler from './middlewares/errorHandler.js';
 import auth from './middlewares/auth.js';
 
