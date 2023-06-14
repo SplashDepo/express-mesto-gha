@@ -18,7 +18,7 @@ const getUserById = (req, res, next) => {
 
   User.findById(id)
     .then((user) => {
-      if (user) return res.send({ data: user });
+      if (user) return res.status(200).send({ data: user });
       throw new NotFoundError('Пользователь с таким id не найден');
     })
     .catch((err) => {
@@ -60,7 +60,14 @@ const createUser = (req, res, next) => {
       about,
       avatar,
     }))
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res
+      .status(200)
+      .send({
+        email: user.email,
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+      }))
     .catch((err) => {
       if (err.code === 11000) {
         next(new ConflictError('Пользователь с таким электронным адресом уже зарегистрирован'));
@@ -84,7 +91,7 @@ const loginUser = (req, res, next) => {
           { expiresIn: '7d' },
         );
 
-        return res.status(201).send({ _id: token });
+        return res.status(200).send({ _id: token });
       }
 
       throw new UnauthorizedError('Неправильные почта или пароль');
