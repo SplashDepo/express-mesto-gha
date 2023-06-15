@@ -1,23 +1,23 @@
 import mongoose, { Schema } from 'mongoose';
 
-import URL_REGEX from '../utils/constant.js';
+import { URL_REGEX } from '../utils/constant.js';
 
 const cardSchema = new Schema({
   name: {
     type: String,
-    required: [true, 'Поле "name" должно быть заполнено'],
-    validate: {
-      validator: ({ length }) => length >= 2 && length <= 30,
-      message: 'Имя карточки должно быть длиной от 2 до 30 символов',
-    },
+    required: [true, 'Название должно быть заполнено'],
+    minlength: [2, 'Название не может быть короче 2 символов'],
+    maxlength: [30, 'Название не может быть длиннее 30 символов'],
   },
   link: {
     type: String,
+    required: [true, 'Ссылка на картинку должна быть заполнена'],
     validate: {
-      validator: (url) => URL_REGEX.test(url),
-      message: 'Требуется ввести URL',
+      validator(url) {
+        return URL_REGEX.test(url);
+      },
+      message: 'Неверно указан URL изображения',
     },
-    required: [true, 'Поле "link" должно быть заполнено'],
   },
   owner: {
     type: Schema.Types.ObjectId,

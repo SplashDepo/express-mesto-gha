@@ -8,7 +8,6 @@ import routerCard from './routes/cards.js';
 import routerSignin from './routes/signin.js';
 import routerSignup from './routes/signup.js';
 import NotFoundError from './errors/NotFoundError.js';
-import errorHandler from './middlewares/errorHandler.js';
 import auth from './middlewares/auth.js';
 
 const { PORT = 3000, URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
@@ -31,9 +30,18 @@ app.use(auth);
 app.use('/users', routerUser);
 app.use('/cards', routerCard);
 
+app.use(errors());
+
 app.use((req, res, next) => next(new NotFoundError('Страницы по запрошенному URL не существует')));
 
-app.use(errors());
-app.use(errorHandler);
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+  res
+    .status(statusCode)
+    .send({
+      message: statusCode === 500 ? 'ошибка на сервере' : message,
+    });
+  next();
+});
 
 app.listen(PORT);
