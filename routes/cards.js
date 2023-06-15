@@ -11,14 +11,14 @@ import {
 
 const router = Router();
 
-router.get('/', getAllCards);
-
 router.post('/', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
     link: Joi.string().required().regex(URL_REGEX),
   }),
 }), createCard);
+
+router.get('/', getAllCards);
 
 router.delete('/:id', celebrate({
   params: Joi.object().keys({

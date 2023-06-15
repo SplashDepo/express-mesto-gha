@@ -13,12 +13,11 @@ import {
 const router = Router();
 
 router.get('/', getAllUsers);
-
 router.get('/me', getCurrentUserInfo);
 
 router.get('/:id', celebrate({
   params: Joi.object().keys({
-    id: Joi.string().required(),
+    id: Joi.string().length(24).hex().required(),
   }),
 }), getUserById);
 

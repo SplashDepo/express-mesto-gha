@@ -5,9 +5,12 @@ import InaccurateDataError from '../errors/InaccurateDataError.js';
 import ForbiddenError from '../errors/ForbiddenError.js';
 
 const getAllCards = (req, res, next) => {
-  Card.find({})
+  Card
+    .find({})
     .populate(['owner', 'likes'])
-    .then((cards) => res.status(200).send({ data: cards }))
+    .then((cards) => {
+      res.status(200).send({ data: cards });
+    })
     .catch(next);
 };
 
@@ -58,7 +61,7 @@ const deleteCard = (req, res, next) => {
 
 const likeCard = (req, res, next) => {
   const { id } = req.params;
-  const { _id: userId } = req.user;
+  const { userId } = req.user;
   Card
     .findByIdAndUpdate(
       id,
@@ -81,7 +84,7 @@ const likeCard = (req, res, next) => {
 
 const dislikeCard = (req, res, next) => {
   const { id } = req.params;
-  const { _id: userId } = req.user;
+  const { userId } = req.user;
   Card
     .findByIdAndUpdate(
       id,
