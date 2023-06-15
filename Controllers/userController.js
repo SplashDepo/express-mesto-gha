@@ -91,7 +91,8 @@ const loginUser = (req, res, next) => {
 
 const updateUserInfo = (req, res, next) => {
   const { name, about } = req.body;
-  const { _id: userId } = req.user;
+  const { userId } = req.user;
+  console.log(req.user);
   User
     .findByIdAndUpdate(
       userId,
@@ -115,7 +116,7 @@ const updateUserInfo = (req, res, next) => {
 
 const updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  const { _id: userId } = req.user;
+  const { userId } = req.user;
   User
     .findByIdAndUpdate(
       userId,
