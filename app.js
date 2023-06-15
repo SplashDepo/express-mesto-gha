@@ -22,8 +22,8 @@ app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use('/signup', routerSignin);
-app.use('/signin', routerSignup);
+app.use('/signup', routerSignup);
+app.use('/signin', routerSignin);
 
 app.use(auth);
 
