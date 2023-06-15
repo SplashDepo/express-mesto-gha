@@ -95,10 +95,9 @@ const dislikeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new InaccurateDataError('Переданы некорректные данные при снятии лайка карточки'));
-      } else {
-        next(err);
+        return next(new InaccurateDataError('Переданы некорректные данные при снятии лайка карточки'));
       }
+      return next(err);
     });
 };
 
