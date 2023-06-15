@@ -5,9 +5,9 @@ import InaccurateDataError from '../errors/InaccurateDataError.js';
 import ForbiddenError from '../errors/ForbiddenError.js';
 
 const getAllCards = (req, res, next) => {
+  console.log('splash');
   Card
     .find({})
-    .populate(['owner', 'likes'])
     .then((cards) => {
       res.status(200).send({ data: cards });
     })
@@ -44,8 +44,7 @@ const deleteCard = (req, res, next) => {
       const { owner: cardOwnerId } = card;
       if (cardOwnerId.valueOf() !== userId) throw new ForbiddenError('Нет прав доступа');
 
-      card
-        .remove()
+      card.deleteOne(card)
         .then(() => res.send({ data: card }))
         .catch(next);
     })
@@ -53,7 +52,7 @@ const deleteCard = (req, res, next) => {
 };
 
 const likeCard = (req, res, next) => {
-  const { id: cardId } = req.params;
+  const { cardId } = req.params;
   console.log(req.params);
   const { userId } = req.user;
   Card
@@ -62,7 +61,6 @@ const likeCard = (req, res, next) => {
       { $addToSet: { likes: userId } },
       { new: true },
     ).orFail(() => {
-      console.log(req.params);
       throw new NotFoundError('Карточка с указанным id не найдена');
     })
     .then((user) => {
