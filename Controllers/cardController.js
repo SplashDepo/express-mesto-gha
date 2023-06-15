@@ -33,41 +33,36 @@ const createCard = (req, res, next) => {
 const deleteCard = (req, res, next) => {
   const { id: cardId } = req.params;
   const { userId } = req.user;
+
   Card
-    .findById({ _id: cardId })
-    .orFail(() => {
-      throw new NotFoundError('Данные по указанному id не найдены');
+    .findById({
+      _id: cardId,
     })
-    .populate(['owner', 'likes'])
     .then((card) => {
-      if (!card.owner.equals(userId)) {
-        throw new ForbiddenError('нет прав');
-      } else {
-        Card.deleteOne(card)
-          .then(() => {
-            res.status(200).send({ data: card });
-          })
-          .catch(next);
-      }
+      if (!card) throw new NotFoundError('Данные по указанному id не найдены');
+
+      const { owner: cardOwnerId } = card;
+      if (cardOwnerId.valueOf() !== userId) throw new ForbiddenError('Нет прав доступа');
+
+      card
+        .remove()
+        .then(() => res.send({ data: card }))
+        .catch(next);
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new InaccurateDataError('Переданы некорректные данные при добавлении лайка карточке'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 const likeCard = (req, res, next) => {
-  const { id } = req.params;
+  const { id: cardId } = req.params;
+  console.log(req.params);
   const { userId } = req.user;
   Card
     .findByIdAndUpdate(
-      id,
+      cardId,
       { $addToSet: { likes: userId } },
       { new: true },
     ).orFail(() => {
+      console.log(req.params);
       throw new NotFoundError('Карточка с указанным id не найдена');
     })
     .then((user) => {
@@ -75,7 +70,7 @@ const likeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new InaccurateDataError('Переданы некорректные данные при добавлении лайка карточке'));
+        next(new InaccurateDataError('Переданы некорректные данные при добавлениилайка карточке'));
       } else {
         next(err);
       }
@@ -83,11 +78,11 @@ const likeCard = (req, res, next) => {
 };
 
 const dislikeCard = (req, res, next) => {
-  const { id } = req.params;
+  const { cardId } = req.params;
   const { userId } = req.user;
   Card
     .findByIdAndUpdate(
-      id,
+      cardId,
       { $pull: { likes: userId } },
       { new: true },
     )

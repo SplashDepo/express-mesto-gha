@@ -11,6 +11,8 @@ import {
 
 const router = Router();
 
+router.get('/', getAllCards);
+
 router.post('/', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
@@ -18,21 +20,19 @@ router.post('/', celebrate({
   }),
 }), createCard);
 
-router.get('/', getAllCards);
-
-router.delete('/:id', celebrate({
+router.delete('/:cardId', celebrate({
   params: Joi.object().keys({
     id: Joi.string().required().regex(ID_REGEX),
   }),
 }), deleteCard);
 
-router.put('/:id/likes', celebrate({
+router.put('/:cardId/likes', celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().required().regex(ID_REGEX),
   }),
 }), likeCard);
 
-router.delete('/:id/likes', celebrate({
+router.delete('/:cardId/likes', celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().required().regex(ID_REGEX),
   }),
