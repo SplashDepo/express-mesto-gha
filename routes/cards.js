@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { celebrate, Joi } from 'celebrate';
-import { URL_REGEX, ID_REGEX } from '../utils/constant.js';
+import { URL_REGEX } from '../utils/constant.js';
 import {
   getAllCards,
   createCard,
@@ -22,19 +22,19 @@ router.post('/', celebrate({
 
 router.delete('/:id', celebrate({
   params: Joi.object().keys({
-    id: Joi.string().required().regex(ID_REGEX),
+    id: Joi.string().length(24).hex().required(),
   }),
 }), deleteCard);
 
 router.put('/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().required().regex(ID_REGEX),
+    cardId: Joi.string().length(24).hex().required(),
   }),
 }), likeCard);
 
 router.delete('/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().required().regex(ID_REGEX),
+    cardId: Joi.string().length(24).hex().required(),
   }),
 }), dislikeCard);
 

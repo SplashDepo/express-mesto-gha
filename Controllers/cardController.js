@@ -5,7 +5,6 @@ import InaccurateDataError from '../errors/InaccurateDataError.js';
 import ForbiddenError from '../errors/ForbiddenError.js';
 
 const getAllCards = (req, res, next) => {
-  console.log('splash');
   Card
     .find({})
     .then((cards) => {
@@ -17,7 +16,6 @@ const getAllCards = (req, res, next) => {
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const { userId: ownerId } = req.user;
-  console.log(req.user);
   Card
     .create({ name, link, owner: ownerId })
     .then((cards) => res.status(201).send({ data: cards }))
@@ -53,7 +51,6 @@ const deleteCard = (req, res, next) => {
 
 const likeCard = (req, res, next) => {
   const { cardId } = req.params;
-  console.log(req.params);
   const { userId } = req.user;
   Card
     .findByIdAndUpdate(
